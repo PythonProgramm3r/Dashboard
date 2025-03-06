@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-Time Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Live Data Dashboard</h1>
+    <div id="chart"></div>
+    <script>
+        let times = [], values = [];
+        function updateData() {
+            fetch('/data')
+                .then(res => res.json())
+                .then(data => {
+                    times.push(data.time);
+                    values.push(data.value);
+                    Plotly.newPlot('chart', [{
+                        x: times,
+                        y: values,
+                        type: 'scatter',
+                        mode: 'lines'
+                    }], {title: 'Real-Time Metrics'});
+                });
+        }
+        setInterval(updateData, 1000); // Update every second
+        updateData();
+    </script>
+</body>
+</html>
